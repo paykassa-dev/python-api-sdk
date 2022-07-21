@@ -31,6 +31,7 @@ class Currency(Enum):
     USDC = "USDC"
     ADA = "ADA"
     EOS = "EOS"
+    SHIB = "SHIB"
 
 
 class System(Enum):
