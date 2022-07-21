@@ -32,6 +32,7 @@ class Currency(Enum):
     ADA = "ADA"
     EOS = "EOS"
     SHIB = "SHIB"
+    ETC = "ETC"
 
 
 class System(Enum):
@@ -44,6 +45,7 @@ class System(Enum):
     DASH = "16"
     BITCOINCASH = "18"
     ZCASH = "19"
+    ETHEREUMCLASSIC = "21"
     RIPPLE = "22"
     TRON = "27"
     STELLAR = "28"
