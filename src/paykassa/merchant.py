@@ -26,7 +26,7 @@ class MerchantApiBase(MerchantApiInterface):
         self._sci_id = api_id
         self._sci_key = api_key
 
-    def set_sci_id(self, api_id: str):
+    def set_sci_id(self, api_id: int):
         self._sci_id = api_id
         return self
 

@@ -19,7 +19,7 @@ class PaymentApiBase(PaymentApiInterface):
         self._api_id = api_id
         self._api_key = api_key
 
-    def set_api_id(self, api_id: str) -> 'PaymentApiBase':
+    def set_api_id(self, api_id: int) -> 'PaymentApiBase':
         self._api_id = api_id
         return self
 
