@@ -5,10 +5,10 @@ from paykassa.dto import CheckBalanceRequest, CheckBalanceResponse, MakePaymentR
 
 class PaymentApiInterface(object):
     def check_balance(self, request: CheckBalanceRequest) -> CheckBalanceResponse:
-        pass
+        raise NotImplementedError
 
     def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
-        pass
+        raise NotImplementedError
 
 
 class PaymentApiBase(PaymentApiInterface):

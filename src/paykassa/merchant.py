@@ -6,16 +6,16 @@ from paykassa.dto import CheckPaymentRequest, CheckPaymentResponse, CheckTransac
 
 class MerchantApiInterface(object):
     def check_payment(self, request: CheckPaymentRequest) -> CheckPaymentResponse:
-        pass
+        raise NotImplementedError
 
     def check_transaction(self, request: CheckTransactionRequest) -> CheckTransactionResponse:
-        pass
+        raise NotImplementedError
 
     def generate_address(self, request: GenerateAddressRequest) -> GenerateAddressResponse:
-        pass
+        raise NotImplementedError
 
     def get_payment_url(self, request: GetPaymentUrlRequest) -> GetPaymentUrlResponse:
-        pass
+        raise NotImplementedError
 
 
 class MerchantApiBase(MerchantApiInterface):
