@@ -31,7 +31,7 @@ class PaymentApiBase(PaymentApiInterface):
     async def _make_request(self, endpoint: str, request: dict) -> dict:
         try:
             self.__set_method_data(endpoint, request)
-            return (await self._client.post(self.__get_api_url(), json=request)).json()
+            return (await self._client.post(self.__get_api_url(), data=request)).json()
         except Exception as e:
             return PaymentApiBase.__get_error_response(e)
 
