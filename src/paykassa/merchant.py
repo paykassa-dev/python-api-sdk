@@ -22,7 +22,7 @@ class MerchantApiBase(MerchantApiInterface):
     BASE_URL = "https://paykassa.app/sci/"
     API_VERSION = 0.4
 
-    def __init__(self, api_id: int, api_key: str):
+    def __init__(self, api_id: str, api_key: str):
         self._sci_id = api_id
         self._sci_key = api_key
 
@@ -59,7 +59,7 @@ class MerchantApiBase(MerchantApiInterface):
 
 
 class MerchantApi(MerchantApiBase):
-    def __init__(self, sci_id: int, sci_key: str):
+    def __init__(self, sci_id: str, sci_key: str):
         super(MerchantApi, self).__init__(sci_id, sci_key)
 
     # see https://paykassa.pro/docs/#api-SCI-sci_confirm_order

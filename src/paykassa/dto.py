@@ -8,7 +8,6 @@ class Request(object):
 
 class Response:
     _response_systems = {
-        "PerfectMoney": System.PERFECTMONEY,
         "Berty": System.BERTY,
         "BitCoin": System.BITCOIN,
         "Ethereum": System.ETHEREUM,
@@ -23,7 +22,8 @@ class Response:
         "BinanceCoin": System.BINANCECOIN,
         "TRON_TRC20": System.TRON_TRC20,
         "BinanceSmartChain_BEP20": System.BINANCESMARTCHAIN_BEP20,
-        "Ethereum_ERC20": System.ETHEREUM_ERC20
+        "Ethereum_ERC20": System.ETHEREUM_ERC20,
+        "EthereumClassic": System.ETHEREUMCLASSIC,
     }
 
     def __init__(self, data: dict):
@@ -46,24 +46,24 @@ class Response:
 
 class CheckBalanceRequest(Request):
     def __init__(self):
-        self.__shop = ""
+        self.__shop_id = ""
 
-    def set_shop(self, shop: str):
-        self.__shop = shop
+    def set_shop_id(self, shop_id: str):
+        self.__shop_id = shop_id
         return self
 
     def normalize(self) -> dict:
         return {
-            "shop": self.__shop
+            "shop_id": self.__shop_id
         }
 
 
 class CheckBalanceResponse(Response):
-    def get_balance(self, system: System, currency: Currency) -> float:
+    def get_balance(self, system: System, currency: Currency) -> str:
         if self.__get_system_currency_pair(currency, system) not in self._data:
             raise KeyError("Can't get a balance by system %s and currency %s" % (system.name, currency.name))
 
-        return float(self._data[self.__get_system_currency_pair(currency, system)])
+        return str(self._data[self.__get_system_currency_pair(currency, system)])
 
     @staticmethod
     def __get_system_currency_pair(currency, system):
@@ -74,19 +74,19 @@ class MakePaymentRequest(Request):
     def __init__(self):
         self.__test = False
         self.__priority = TransactionPriority.MEDIUM
-        self.__tag = 0
+        self.__tag = "0"
         self.__number = ""
         self.__paid_commission = CommissionPayer.SHOP
         self.__system = System.BITCOIN
         self.__currency = Currency.BTC
-        self.__shop = ""
-        self.__amount = 0.0
+        self.__shop_id = ""
+        self.__amount = "0.0"
 
-    def set_shop(self, shop: str):
-        self.__shop = shop
+    def set_shop_id(self, shop_id: str):
+        self.__shop_id = shop_id
         return self
 
-    def set_amount(self, amount: float):
+    def set_amount(self, amount: str):
         self.__amount = amount
         return self
 
@@ -106,7 +106,7 @@ class MakePaymentRequest(Request):
         self.__number = number
         return self
 
-    def set_tag(self, tag: int):
+    def set_tag(self, tag: str):
         self.__tag = tag
         return self
 
@@ -126,7 +126,7 @@ class MakePaymentRequest(Request):
             "paid_commission": self.__paid_commission.value,
             "system": self.__system.value,
             "currency": self.__currency.value,
-            "shop": self.__shop,
+            "shop_id": self.__shop_id,
             "amount": self.__amount,
             "test": self.__test,
         }
@@ -142,11 +142,11 @@ class MakePaymentResponse(Response):
     def get_txid(self) -> str:
         return str(self._data["txid"])
 
-    def get_amount(self) -> float:
-        return float(self._data["amount"])
+    def get_amount(self) -> str:
+        return str(self._data["amount"])
 
-    def get_amount_pay(self) -> float:
-        return float(self._data["amount_pay"])
+    def get_amount_pay(self) -> str:
+        return str(self._data["amount_pay"])
 
     def get_system(self) -> System:
         return self._get_system(self._data["system"])
@@ -157,11 +157,11 @@ class MakePaymentResponse(Response):
     def get_number(self) -> str:
         return str(self._data["number"])
 
-    def get_shop_commission_percent(self) -> float:
-        return float(self._data["shop_comission_percent"])
+    def get_shop_commission_percent(self) -> str:
+        return str(self._data["shop_commission_percent"])
 
-    def get_shop_commission_amount(self) -> float:
-        return float(self._data["shop_comission_amount"])
+    def get_shop_commission_amount(self) -> str:
+        return str(self._data["shop_commission_amount"])
 
     def get_paid_commission(self) -> str:
         return str(self._data["paid_commission"])
@@ -189,16 +189,16 @@ class CheckPaymentRequest(Request):
 
 class CheckPaymentResponse(Response):
     def get_transaction(self) -> int:
-        return int(self._data["transaction"])
+        return str(self._data["transaction"])
 
-    def get_shop_id(self) -> int:
-        return int(self._data["shop_id"])
+    def get_shop_id(self) -> str:
+        return str(self._data["shop_id"])
 
     def get_order_id(self) -> str:
         return str(self._data["order_id"])
 
-    def get_amount(self) -> float:
-        return float(self._data["amount"])
+    def get_amount(self) -> str:
+        return str(self._data["amount"])
 
     def get_currency(self) -> Currency:
         return Currency(self._data["currency"])
@@ -240,23 +240,23 @@ class CheckTransactionRequest(Request):
 
 
 class CheckTransactionResponse(Response):
-    def get_transaction(self) -> int:
-        return int(self._data["transaction"])
+    def get_transaction(self) -> str:
+        return str(self._data["transaction"])
 
     def get_txid(self) -> str:
         return str(self._data["txid"])
 
-    def get_shop_id(self) -> int:
-        return int(self._data["shop_id"])
+    def get_shop_id(self) -> str:
+        return str(self._data["shop_id"])
 
     def get_order_id(self) -> str:
         return str(self._data["order_id"])
 
-    def get_amount(self) -> float:
-        return float(self._data["amount"])
+    def get_amount(self) -> str:
+        return str(self._data["amount"])
 
-    def get_fee(self) -> float:
-        return float(self._data["fee"])
+    def get_fee(self) -> str:
+        return str(self._data["fee"])
 
     def get_currency(self) -> Currency:
         return Currency(self._data["currency"])
@@ -306,7 +306,7 @@ class GenerateAddressRequest(Request):
         self.__order_id = order_id
         return self
 
-    def set_amount(self, amount: float):
+    def set_amount(self, amount: str):
         self.__amount = amount
         return self
 
@@ -344,8 +344,8 @@ class GenerateAddressRequest(Request):
 
 
 class GenerateAddressResponse(Response):
-    def get_invoice(self) -> int:
-        return int(self._data["invoice"])
+    def get_invoice_id(self) -> int:
+        return str(self._data["invoice_id"])
 
     def get_status(self) -> str:
         return str(self._data["status"])
@@ -356,8 +356,8 @@ class GenerateAddressResponse(Response):
     def get_wallet(self) -> str:
         return str(self._data["wallet"])
 
-    def get_amount(self) -> float:
-        return float(self._data["amount"])
+    def get_amount(self) -> str:
+        return str(self._data["amount"])
 
     def get_system(self) -> System:
         return self._get_system(self._data["system"])
@@ -377,8 +377,8 @@ class GetPaymentUrlRequest(Request):
         self.__test = False
         self.__order_id = ""
         self.__amount = 0.0
-        self.__currency = Currency.USD
-        self.__system = System.PERFECTMONEY
+        self.__currency = Currency.USDT
+        self.__system = System.TRON_TRC20
         self.__comment = ""
         self.__paid_commission = CommissionPayer.SHOP
 
@@ -386,7 +386,7 @@ class GetPaymentUrlRequest(Request):
         self.__order_id = order_id
         return self
 
-    def set_amount(self, amount: float):
+    def set_amount(self, amount: str):
         self.__amount = amount
         return self
 

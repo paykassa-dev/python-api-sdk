@@ -55,7 +55,7 @@ class MerchantApiMock(MerchantApi):
                 "error": False,
                 "message": "Data has been successfully received.",
                 "data": {
-                    "invoice": 579205,
+                    "invoice_id": "579205",
                     "order_id": "12345",
                     "wallet": "3LaKdUrPfVyZeEVYpZei3HwjqQj5AHHTCE",
                     "amount": "1.03030000",
@@ -88,7 +88,7 @@ class MerchantApiMock(MerchantApi):
 
 class TestMerchantApi(TestCase):
     def setUp(self) -> None:
-        self.client = MerchantApiMock(1, "test")
+        self.client = MerchantApiMock("1", "test")
 
     def test_check_payment(self):
         response = self.client.check_payment(CheckPaymentRequest())
@@ -96,10 +96,10 @@ class TestMerchantApi(TestCase):
         self.assertFalse(response.has_error())
         self.assertEqual("Payment successfully verified", response.get_message())
 
-        self.assertEqual(96401, response.get_transaction())
-        self.assertEqual(123, response.get_shop_id())
+        self.assertEqual("96401", response.get_transaction())
+        self.assertEqual("123", response.get_shop_id())
         self.assertEqual("12345", response.get_order_id())
-        self.assertEqual(1.01, response.get_amount())
+        self.assertEqual("1.01", response.get_amount())
         self.assertEqual(Currency.BTC, response.get_currency())
         self.assertEqual(System.BITCOIN, response.get_system())
         self.assertEqual("3LaKdUrPfVyZeEVYpZei3HwjqQj5AHHTCE", response.get_address())
@@ -113,12 +113,12 @@ class TestMerchantApi(TestCase):
         self.assertFalse(response.has_error())
         self.assertEqual("Ok", response.get_message())
 
-        self.assertEqual(2431038, response.get_transaction())
+        self.assertEqual("2431038", response.get_transaction())
         self.assertEqual("e2be8b51ad0ccbae2a2433f8c940035ce97903c7de1a1cefa1db40cc1cabb0e5", response.get_txid())
-        self.assertEqual(138, response.get_shop_id())
+        self.assertEqual("138", response.get_shop_id())
         self.assertEqual("order 1", response.get_order_id())
-        self.assertEqual(1.00000000, response.get_amount())
-        self.assertEqual(0.00000000, response.get_fee())
+        self.assertEqual("1.00000000", response.get_amount())
+        self.assertEqual("0.00000000", response.get_fee())
         self.assertEqual(Currency.DOGE, response.get_currency())
         self.assertEqual(System.DOGECOIN, response.get_system())
         self.assertEqual("", response.get_address_from())
@@ -140,10 +140,10 @@ class TestMerchantApi(TestCase):
         self.assertFalse(response.has_error())
         self.assertEqual("Data has been successfully received.", response.get_message())
 
-        self.assertEqual(579205, response.get_invoice())
+        self.assertEqual("579205", response.get_invoice_id())
         self.assertEqual("12345", response.get_order_id())
         self.assertEqual("3LaKdUrPfVyZeEVYpZei3HwjqQj5AHHTCE", response.get_wallet())
-        self.assertEqual(1.03030000, response.get_amount())
+        self.assertEqual("1.03030000", response.get_amount())
         self.assertEqual(System.BITCOIN, response.get_system())
         self.assertEqual(Currency.BTC, response.get_currency())
         self.assertEqual("https://crypto.paykassa.pro/sci/index.php?hash=ba276492c1c8ff5bfad7ea46463aca85d9c447ee940aceeb71e4a726d89458cd", response.get_url())

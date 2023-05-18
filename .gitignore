@@ -1,0 +1,8 @@
+dist/
+dist/*
+pkg/
+pkg/*
+paykassa_api_sdk.egg-info/
+paykassa_api_sdk.egg-info/*
+tests/__pycache__/
+tests/__pycache__/*

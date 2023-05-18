@@ -13,7 +13,7 @@ class PaymentApiInterface(object):
 
 class PaymentApiBase(PaymentApiInterface):
     BASE_URL = "https://paykassa.app/api/"
-    API_VERSION = 0.5
+    API_VERSION = 0.9
 
     def __init__(self, api_id: int, api_key: str):
         self._api_id = api_id

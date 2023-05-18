@@ -36,7 +36,6 @@ class Currency(Enum):
 
 
 class System(Enum):
-    PERFECTMONEY = "2"
     BERTY = "7"
     BITCOIN = "11"
     ETHEREUM = "12"

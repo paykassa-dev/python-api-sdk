@@ -23,7 +23,7 @@ from paykassa.dto import CheckBalanceRequest
 from paykassa.struct import System, Currency
 
 request = CheckBalanceRequest() \
-    .set_shop("123")
+    .set_shop_id("123")
 
 response = client.check_balance(request)
 
@@ -39,8 +39,8 @@ from paykassa.dto import MakePaymentRequest
 from paykassa.struct import System, Currency, CommissionPayer, TransactionPriority 
 
 request = MakePaymentRequest() \
-    .set_shop("123") \
-    .set_amount(1.02) \
+    .set_shop_id("123") \
+    .set_amount("1.02") \
     .set_priority(TransactionPriority.MEDIUM) \
     .set_system(System.BITCOIN) \
     .set_currency(Currency.BTC) \
@@ -100,7 +100,7 @@ from paykassa.dto import GenerateAddressRequest
 from paykassa.struct import System, Currency, CommissionPayer
 
 request = GenerateAddressRequest() \
-    .set_amount(1.123456) \
+    .set_amount("1.123456") \
     .set_currency(Currency.DOGE) \
     .set_system(System.DOGECOIN) \
     .set_comment("test") \
@@ -120,9 +120,9 @@ from paykassa.dto import GetPaymentUrlRequest
 from paykassa.struct import System, Currency, CommissionPayer
 
 request = GetPaymentUrlRequest() \
-    .set_amount(110) \
-    .set_currency(Currency.USD) \
-    .set_system(System.PERFECTMONEY) \
+    .set_amount("110") \
+    .set_currency(Currency.USDT) \
+    .set_system(System.TRON_TRC20) \
     .set_comment("test") \
     .set_paid_commission(CommissionPayer.CLIENT)
 

@@ -8,17 +8,17 @@ from paykassa.dto import CheckBalanceRequest, MakePaymentRequest, CheckPaymentRe
 class TestCheckBalanceRequest(TestCase):
     def test_normalize(self):
         request = CheckBalanceRequest() \
-            .set_shop("123")
+            .set_shop_id("123")
 
         self.assertDictEqual({
-            "shop": "123"
+            "shop_id": "123"
         }, request.normalize())
 
 
 class TestMakePaymentRequest(TestCase):
     def test_normalize(self):
         request = MakePaymentRequest() \
-            .set_shop("123") \
+            .set_shop_id("123") \
             .set_tag(594) \
             .set_amount(1123.0003233) \
             .set_number("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy") \
@@ -29,7 +29,7 @@ class TestMakePaymentRequest(TestCase):
             .set_test(True)
 
         self.assertDictEqual({
-            "shop": "123",
+            "shop_id": "123",
             "amount": 1123.0003233,
             "currency": "BTC",
             "system": "11",
@@ -69,7 +69,7 @@ class TestGenerateAddressRequest(TestCase):
     def test_normalize(self):
         request = GenerateAddressRequest() \
             .set_order_id("order_id") \
-            .set_amount(123123.4506456) \
+            .set_amount("123123.4506456") \
             .set_currency(Currency.BTC) \
             .set_system(System.DOGECOIN) \
             .set_comment("") \
@@ -78,7 +78,7 @@ class TestGenerateAddressRequest(TestCase):
 
         self.assertDictEqual({
             "order_id": "order_id",
-            "amount": 123123.4506456,
+            "amount": "123123.4506456",
             "currency": "BTC",
             "system": "15",
             "comment": "",
@@ -92,18 +92,18 @@ class TestGetPaymentUrlRequest(TestCase):
     def test_normalize(self):
         request = GetPaymentUrlRequest() \
             .set_order_id("order_id") \
-            .set_amount(123.45) \
-            .set_currency(Currency.USD) \
-            .set_system(System.PERFECTMONEY) \
+            .set_amount("123.45") \
+            .set_currency(Currency.USDT) \
+            .set_system(System.TRON_TRC20) \
             .set_comment("TEST") \
             .set_paid_commission(CommissionPayer.SHOP) \
             .set_test(True)
 
         self.assertDictEqual({
             "order_id": "order_id",
-            "amount": 123.45,
-            "currency": "USD",
-            "system": "2",
+            "amount": "123.45",
+            "currency": "USDT",
+            "system": "30",
             "comment": "TEST",
             "phone": False,
             "paid_commission": "shop",

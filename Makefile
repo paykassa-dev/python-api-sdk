@@ -8,3 +8,9 @@ build: install_dependencies
 
 deploy: build
 	python3 -m twine upload --repository pypi dist/*
+
+install_module: build
+	pip3 install ./dist/*.tar.gz
+
+run_test: install_module
+	python3 -m unittest tests/*.py
