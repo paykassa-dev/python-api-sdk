@@ -1,23 +1,24 @@
-import requests
+from httpx import AsyncClient
 
 from paykassa.dto import CheckBalanceRequest, CheckBalanceResponse, MakePaymentRequest, MakePaymentResponse
 
 
 class PaymentApiInterface(object):
-    def check_balance(self, request: CheckBalanceRequest) -> CheckBalanceResponse:
+    async def check_balance(self, request: CheckBalanceRequest) -> CheckBalanceResponse:
         raise NotImplementedError
 
-    def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
+    async def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
         raise NotImplementedError
 
 
 class PaymentApiBase(PaymentApiInterface):
     BASE_URL = "https://paykassa.app/api/"
-    API_VERSION = 0.9
+    API_VERSION = 0.5
 
     def __init__(self, api_id: int, api_key: str):
         self._api_id = api_id
         self._api_key = api_key
+        self._client = AsyncClient()
 
     def set_api_id(self, api_id: int) -> 'PaymentApiBase':
         self._api_id = api_id
@@ -27,10 +28,10 @@ class PaymentApiBase(PaymentApiInterface):
         self._api_key = api_key
         return self
 
-    def _make_request(self, endpoint: str, request: dict) -> dict:
+    async def _make_request(self, endpoint: str, request: dict) -> dict:
         try:
             self.__set_method_data(endpoint, request)
-            return requests.post(self.__get_api_url(), request).json()
+            return (await self._client.post(self.__get_api_url(), data=request)).json()
         except Exception as e:
             return PaymentApiBase.__get_error_response(e)
 
@@ -56,9 +57,11 @@ class PaymentApi(PaymentApiBase):
         super(PaymentApi, self).__init__(api_id, api_key)
 
     # see https://paykassa.pro/docs/#api-API-api_get_shop_balance
-    def check_balance(self, request: CheckBalanceRequest) -> CheckBalanceResponse:
-        return CheckBalanceResponse(self._make_request("api_get_shop_balance", request.normalize()))
+    async def check_balance(self, request: CheckBalanceRequest) -> CheckBalanceResponse:
+        response = await self._make_request("api_get_shop_balance", request.normalize())
+        return CheckBalanceResponse(response)
 
     # see https://paykassa.pro/docs/#api-API-api_payment
-    def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
-        return MakePaymentResponse(self._make_request('api_payment', request.normalize()))
+    async def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
+        response = await self._make_request('api_payment', request.normalize())
+        return MakePaymentResponse(response)

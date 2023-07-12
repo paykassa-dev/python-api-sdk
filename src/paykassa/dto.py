@@ -3,7 +3,7 @@ from paykassa.struct import TransactionPriority, Currency, System, CommissionPay
 
 class Request(object):
     def normalize(self) -> dict:
-        pass
+        raise NotImplementedError
 
 
 class Response:

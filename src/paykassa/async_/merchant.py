@@ -1,20 +1,20 @@
-import requests
+from httpx import AsyncClient
 
 from paykassa.dto import CheckPaymentRequest, CheckPaymentResponse, CheckTransactionRequest, CheckTransactionResponse, \
     GenerateAddressRequest, GenerateAddressResponse, GetPaymentUrlRequest, GetPaymentUrlResponse
 
 
 class MerchantApiInterface(object):
-    def check_payment(self, request: CheckPaymentRequest) -> CheckPaymentResponse:
+    async def check_payment(self, request: CheckPaymentRequest) -> CheckPaymentResponse:
         raise NotImplementedError
 
-    def check_transaction(self, request: CheckTransactionRequest) -> CheckTransactionResponse:
+    async def check_transaction(self, request: CheckTransactionRequest) -> CheckTransactionResponse:
         raise NotImplementedError
 
-    def generate_address(self, request: GenerateAddressRequest) -> GenerateAddressResponse:
+    async def generate_address(self, request: GenerateAddressRequest) -> GenerateAddressResponse:
         raise NotImplementedError
 
-    def get_payment_url(self, request: GetPaymentUrlRequest) -> GetPaymentUrlResponse:
+    async def get_payment_url(self, request: GetPaymentUrlRequest) -> GetPaymentUrlResponse:
         raise NotImplementedError
 
 
@@ -22,9 +22,10 @@ class MerchantApiBase(MerchantApiInterface):
     BASE_URL = "https://paykassa.app/sci/"
     API_VERSION = 0.4
 
-    def __init__(self, api_id: str, api_key: str):
+    def __init__(self, api_id: int, api_key: str):
         self._sci_id = api_id
         self._sci_key = api_key
+        self._client = AsyncClient()
 
     def set_sci_id(self, api_id: int):
         self._sci_id = api_id
@@ -34,10 +35,10 @@ class MerchantApiBase(MerchantApiInterface):
         self._sci_key = api_key
         return self
 
-    def _make_request(self, endpoint: str, request: dict) -> dict:
+    async def _make_request(self, endpoint: str, request: dict) -> dict:
         try:
             self.__set_method_data(endpoint, request)
-            return requests.post(self.__get_api_url(), request).json()
+            return (await self._client.post(self.__get_api_url(), data=request)).json()
         except Exception as e:
             return MerchantApiBase.__get_error_response(e)
 
@@ -59,21 +60,25 @@ class MerchantApiBase(MerchantApiInterface):
 
 
 class MerchantApi(MerchantApiBase):
-    def __init__(self, sci_id: str, sci_key: str):
+    def __init__(self, sci_id: int, sci_key: str):
         super(MerchantApi, self).__init__(sci_id, sci_key)
 
     # see https://paykassa.pro/docs/#api-SCI-sci_confirm_order
-    def check_payment(self, request: CheckPaymentRequest) -> CheckPaymentResponse:
-        return CheckPaymentResponse(self._make_request("sci_confirm_order", request.normalize()))
+    async def check_payment(self, request: CheckPaymentRequest) -> CheckPaymentResponse:
+        response = await self._make_request("sci_confirm_order", request.normalize())
+        return CheckPaymentResponse(response)
 
     # see https://paykassa.pro/docs/#api-SCI-sci_confirm_transaction_notification
-    def check_transaction(self, request: CheckTransactionRequest) -> CheckTransactionResponse:
-        return CheckTransactionResponse(self._make_request("sci_confirm_transaction_notification", request.normalize()))
+    async def check_transaction(self, request: CheckTransactionRequest) -> CheckTransactionResponse:
+        response = await self._make_request("sci_confirm_transaction_notification", request.normalize())
+        return CheckTransactionResponse(response)
 
     # see https://paykassa.pro/docs/#api-SCI-sci_create_order_get_data
-    def generate_address(self, request: GenerateAddressRequest) -> GenerateAddressResponse:
-        return GenerateAddressResponse(self._make_request("sci_create_order_get_data", request.normalize()))
+    async def generate_address(self, request: GenerateAddressRequest) -> GenerateAddressResponse:
+        response = await self._make_request("sci_create_order_get_data", request.normalize())
+        return GenerateAddressResponse(response)
 
     # see https://paykassa.pro/docs/#api-SCI-sci_create_order
-    def get_payment_url(self, request: GetPaymentUrlRequest) -> GetPaymentUrlResponse:
-        return GetPaymentUrlResponse(self._make_request("sci_create_order", request.normalize()))
+    async def get_payment_url(self, request: GetPaymentUrlRequest) -> GetPaymentUrlResponse:
+        response = await self._make_request("sci_create_order", request.normalize())
+        return GetPaymentUrlResponse(response)

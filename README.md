@@ -1,10 +1,19 @@
 # Paykassa SCI & API
+Synchronous and asynchronous version included!
 
 ## Installation
 
 ```
 python -m pip install paykassa-api-sdk
 ```
+
+## Using
+
+### Synchronous
+Like in documentation below.
+
+### Asynchronous
+Like in documentation below, but import from submodule `async_`, and use `await` before making any request.
 
 ## Payment API
 
