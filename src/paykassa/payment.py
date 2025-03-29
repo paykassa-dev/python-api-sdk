@@ -1,6 +1,9 @@
 import requests
 
-from paykassa.dto import CheckBalanceRequest, CheckBalanceResponse, MakePaymentRequest, MakePaymentResponse
+from paykassa.dto import CheckBalanceRequest, CheckBalanceResponse, \
+    MakePaymentRequest, MakePaymentResponse, \
+    GetTxidsOfInvoicesResponse, \
+    GetTxidsOfInvoicesRequest
 
 
 class PaymentApiInterface(object):
@@ -8,6 +11,9 @@ class PaymentApiInterface(object):
         pass
 
     def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
+        pass
+
+    def get_txids_by_invoices(self, request: GetTxidsOfInvoicesRequest) -> GetTxidsOfInvoicesResponse:
         pass
 
 
@@ -62,3 +68,7 @@ class PaymentApi(PaymentApiBase):
     # see https://paykassa.pro/docs/#api-API-api_payment
     def make_payment(self, request: MakePaymentRequest) -> MakePaymentResponse:
         return MakePaymentResponse(self._make_request('api_payment', request.normalize()))
+
+    # see https://paykassa.pro/docs/#api-API-api_get_shop_txids
+    def get_txids_by_invoices(self, request: GetTxidsOfInvoicesRequest) -> GetTxidsOfInvoicesResponse:
+        return GetTxidsOfInvoicesResponse(self._make_request('api_get_shop_txids', request.normalize()))

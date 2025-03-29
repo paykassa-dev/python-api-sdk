@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from paykassa.struct import Currency, System, TransactionPriority, CommissionPayer
 from paykassa.dto import CheckBalanceRequest, MakePaymentRequest, CheckPaymentRequest, CheckTransactionRequest, \
-    GenerateAddressRequest, GetPaymentUrlRequest
+    GenerateAddressRequest, GetPaymentUrlRequest, GetTxidsOfInvoicesRequest
 
 
 class TestCheckBalanceRequest(TestCase):
@@ -108,4 +108,16 @@ class TestGetPaymentUrlRequest(TestCase):
             "phone": False,
             "paid_commission": "shop",
             "test": True,
+        }, request.normalize())
+
+
+class TestGetTxidByInvoicesRequest(TestCase):
+    def test_normalize(self):
+        request = GetTxidsOfInvoicesRequest() \
+            .set_shop_id("100500") \
+            .set_invoices([ "100", "200", "300", ]) \
+
+        self.assertDictEqual({
+            "shop_id": "100500",
+            "invoices[]": [ "100", "200", "300", ],
         }, request.normalize())

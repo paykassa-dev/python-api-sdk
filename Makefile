@@ -1,3 +1,9 @@
+init:
+	python3 -m venv ./venv
+
+activate:
+	source ./venv/bin/activate
+
 install_dependencies:
 	python3 -m pip install --upgrade build
 	python3 -m pip install --upgrade twine

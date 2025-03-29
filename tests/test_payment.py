@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from paykassa.struct import System, Currency
-from paykassa.dto import CheckBalanceRequest, MakePaymentRequest
+from paykassa.dto import CheckBalanceRequest, MakePaymentRequest, GetTxidsOfInvoicesRequest
 from paykassa.payment import PaymentApi
 
 
@@ -33,6 +33,22 @@ class PaymentApiMock(PaymentApi):
                     "shop_commission_percent": "1.5",
                     "shop_commission_amount": "1.0",
                     "paid_commission": "shop"
+                }
+            }
+        elif endpoint == "api_get_shop_txids":
+            return {
+                "error": False,
+                "message": "Ok",
+                "data": {
+                    "111111111": [
+                        "111111111555555555666666667777777788888888889999999"
+                    ],
+                    "222222222": [
+                        "222222222555555555666666667777777788888888889999999"
+                    ],
+                    "3333333333": [
+                        "3333333333555555555666666667777777788888888889999999"
+                    ]
                 }
             }
 
@@ -74,3 +90,28 @@ class TestPaymentApi(TestCase):
         self.assertEqual("1.0", response.get_shop_commission_amount())
         self.assertEqual("shop", response.get_paid_commission())
 
+
+    def test_get_txids_by_invoices(self):
+        response = self.client.get_txids_by_invoices(GetTxidsOfInvoicesRequest())
+
+        self.assertFalse(response.has_error())
+        self.assertEqual("Ok", response.get_message())
+
+        self.assertEqual([
+                        "111111111555555555666666667777777788888888889999999"
+                    ], response.get_txids_of_invoice("111111111"))
+        self.assertEqual([
+                        "222222222555555555666666667777777788888888889999999"
+                    ], response.get_txids_of_invoice("222222222"))
+
+        self.assertEqual([
+                        "3333333333555555555666666667777777788888888889999999"
+                    ], response.get_txids_of_invoice("3333333333"))
+
+        with self.assertRaises(KeyError) as context:
+            response.get_txids_of_invoice("4444444444")
+
+        self.assertEqual(
+            context.exception.args[0],
+            "The txids of the invoice 4444444444 is not found"
+        )

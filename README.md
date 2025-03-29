@@ -54,6 +54,32 @@ if not response.has_error():
     print(response.get_paid_commission())
 ```
 
+
+### Get txids by invoice IDs 
+
+```python
+from src.paykassa.dto import GetTxidsOfInvoicesRequest
+
+invoices = ["37411867", "37411866", "37411817", ]
+
+request = GetTxidsOfInvoicesRequest() \
+    .set_shop_id("1234") \
+    .set_invoices(invoices)
+
+response = client.get_txids_by_invoices(request)
+
+
+if not response.has_error():
+    for invoice in invoices:
+        try:
+            print(("Invoice %s: %s" % (invoice, response.get_txids_of_invoice(invoice))))
+        except KeyError as e:
+            print(e.args[0])  # invoice id not found
+            continue
+else:
+    print("Errors: %s" % (response.get_message()))
+```
+
 ## Merchant API
 
 ### Initialize Client

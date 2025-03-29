@@ -8,14 +8,12 @@ class Request(object):
 
 class Response:
     _response_systems = {
-        "Berty": System.BERTY,
         "BitCoin": System.BITCOIN,
         "Ethereum": System.ETHEREUM,
         "Litecoin": System.BITCOIN,
         "Dogecoin": System.DOGECOIN,
         "Dash": System.DASH,
         "BitcoinCash": System.BITCOINCASH,
-        "Zcash": System.ZCASH,
         "Ripple": System.RIPPLE,
         "TRON": System.TRON,
         "Stellar": System.STELLAR,
@@ -23,7 +21,7 @@ class Response:
         "TRON_TRC20": System.TRON_TRC20,
         "BinanceSmartChain_BEP20": System.BINANCESMARTCHAIN_BEP20,
         "Ethereum_ERC20": System.ETHEREUM_ERC20,
-        "EthereumClassic": System.ETHEREUMCLASSIC,
+        "TON": System.TON,
     }
 
     def __init__(self, data: dict):
@@ -432,3 +430,29 @@ class GetPaymentUrlResponse(Response):
 
     def get_params(self) -> dict:
         return self._data["params"]
+
+
+class GetTxidsOfInvoicesRequest(Request):
+    def __init__(self):
+        self.__shop_id = ""
+        self.__invoices = []
+
+    def set_shop_id(self, shop_id: str):
+        self.__shop_id = shop_id
+        return self
+    def set_invoices(self, invoices: list):
+        self.__invoices = invoices
+        return self
+
+    def normalize(self) -> dict:
+        return {
+            "shop_id": self.__shop_id,
+            "invoices[]": self.__invoices,
+        }
+
+
+class GetTxidsOfInvoicesResponse(Response):
+    def get_txids_of_invoice(self, invoice_id: str) -> list[str]:
+        if invoice_id not in self._data:
+            raise KeyError("The txids of the invoice %s is not found" % (invoice_id, ))
+        return self._data[invoice_id];
