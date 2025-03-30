@@ -58,7 +58,7 @@ if not response.has_error():
 ### Get txids by invoice IDs 
 
 ```python
-from src.paykassa.dto import GetTxidsOfInvoicesRequest
+from paykassa.dto import GetTxidsOfInvoicesRequest
 
 invoices = ["37411867", "37411866", "37411817", ]
 
